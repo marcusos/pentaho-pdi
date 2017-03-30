@@ -41,13 +41,18 @@ RUN mkdir /downloads && \
 	cp /downloads/${MYSQL_JDBC_V}/${MYSQL_JDBC_V}-bin.jar /opt/pentaho/data-integration/lib/${MYSQL_JDBC_V}-bin.jar && \
     rm -rf /downloads/
 
-
 # =============================== START ===================
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+
 EXPOSE 8080
 ADD configuration.xml /opt/pentaho/data-integration/configuration.xml
+
+# Configure TimeZone (Set your locale).
+RUN sed -i 's/ZONE=.*/ZONE=Brazil\/East/g' /etc/localtime && \
+ln -sf /usr/share/zoneinfo/Brazil/East /etc/localtime
+ENV PENTAHO_DI_JAVA_OPTIONS "-Xms1024m -Xmx2048m -XX:MaxPermSize=256m -Duser.timezone=Brazil/East"
 
 CMD (/opt/pentaho/data-integration/carte.sh /opt/pentaho/data-integration/configuration.xml)
 
