@@ -35,11 +35,11 @@ RUN  unzip -q /opt/pentaho/pdi-ce.zip -d /opt/pentaho/ && \
 RUN chmod +x /opt/pentaho/data-integration/carte.sh
 
 # =============================== Installing JDBC drivers ===================
-RUN mkdir /downloads/drivers/ && \
-	wget https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_JDBC_V}.zip -R /downloads/drivers/mysql_jdbc.zip && \
-	unzip -q /downloads/drivers/lib/mysql_jdbc.zip -d /downloads/drivers/ && \
-	cp /downloads/drivers/${MYSQL_JDBC_V}/${MYSQL_JDBC_V}-bin.jar /opt/pentaho/data-integration/lib/${MYSQL_JDBC_V}-bin.jar && \
-    rm -rf /downloads/drivers/
+RUN mkdir /downloads && \
+	wget https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_JDBC_V}.zip -O /downloads/mysql_jdbc.zip && \
+	unzip -q /downloads/mysql_jdbc.zip -d /downloads/ && \
+	cp /downloads/${MYSQL_JDBC_V}/${MYSQL_JDBC_V}-bin.jar /opt/pentaho/data-integration/lib/${MYSQL_JDBC_V}-bin.jar && \
+    rm -rf /downloads/
 
 
 # =============================== START ===================
@@ -50,3 +50,4 @@ EXPOSE 8080
 ADD configuration.xml /opt/pentaho/data-integration/configuration.xml
 
 CMD (/opt/pentaho/data-integration/carte.sh /opt/pentaho/data-integration/configuration.xml)
+
