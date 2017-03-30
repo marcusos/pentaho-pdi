@@ -1,6 +1,8 @@
 FROM phusion/baseimage:latest
 MAINTAINER Marcus Oliveira da Silva <marcus.oli.silva@gmail.com>
 
+#Base reference http://diethardsteiner.github.io/pdi/2016/04/21/PDI-Docker-Part-1.html
+
 # Set correct environment variables.
 ENV HOME /root
 ENV PENTAHO_HOME /opt/pentaho
@@ -8,6 +10,7 @@ ENV PDI_HOME ${PENTAHO_HOME}/data-integration
 ENV BASE_REL 7.0
 ENV REV 0.0-25
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+ENV MYSQL_JDBC_V mysql-connector-java-5.1.41
 
 # =============================== Start Image Customization ===================
 # Make sure base image is updated then install needed linux tools
@@ -29,9 +32,17 @@ RUN  mkdir /opt/pentaho/ && \
 
 RUN  unzip -q /opt/pentaho/pdi-ce.zip -d /opt/pentaho/ && \
      rm /opt/pentaho/pdi-ce.zip
-
 RUN chmod +x /opt/pentaho/data-integration/carte.sh
 
+# =============================== Installing JDBC drivers ===================
+RUN mkdir /downloads/drivers/ && \
+	wget https://dev.mysql.com/get/Downloads/Connector-J/${MYSQL_JDBC_V}.zip -R /downloads/drivers/mysql_jdbc.zip && \
+	unzip -q /downloads/drivers/lib/mysql_jdbc.zip -d /downloads/drivers/ && \
+	cp /downloads/drivers/${MYSQL_JDBC_V}/${MYSQL_JDBC_V}-bin.jar /opt/pentaho/data-integration/lib/${MYSQL_JDBC_V}-bin.jar && \
+    rm -rf /downloads/drivers/
+
+
+# =============================== START ===================
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

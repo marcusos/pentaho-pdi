@@ -1,7 +1,10 @@
 <slave_config>
-<slaveserver>
-  <name>EtlServer</name>
-  	<hostname>localhost</hostname>
-  <port>8080</port>
-</slaveserver>
-<slave_config>
+  <slaveserver>
+    <name>carte-server</name>
+    <network_interface>eth0</network_interface>
+    <port>8080</port>
+    <username>cluster</username>
+    <password>cluster</password>
+    <master>Y</master>
+  </slaveserver>
+</slave_config>
